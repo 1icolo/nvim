@@ -1,4 +1,4 @@
-# This is my PDE (Personal Development Environment)
+# Neovim Configuration
 
 ## Introduction
 
