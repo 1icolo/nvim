@@ -4,6 +4,11 @@
 
 Based on the kickstart.nvim
 
+Best used with:
+- [Lazygit](https://github.com/jesseduffield/lazygit)
+- [ripgrep](https://github.com/BurntSushi/ripgrep)
+- [fzf](https://github.com/BurntSushi/ripgrep)
+
 ## Installation
 
 ### Install External Dependencies
@@ -38,13 +43,13 @@ git clone https://github.com/1icolo/nvim.git "${XDG_CONFIG_HOME:-$HOME/.config}"
 If you're using `cmd.exe`:
 
 ```
-git clone https://github.com/nvim-lua/kickstart.nvim.git %userprofile%\AppData\Local\nvim\ 
+git clone https://github.com/1icolo/nvim.git %userprofile%\AppData\Local\nvim\ 
 ```
 
 If you're using `powershell.exe`
 
 ```
-git clone https://github.com/nvim-lua/kickstart.nvim.git $env:USERPROFILE\AppData\Local\nvim\ 
+git clone https://github.com/1icolo/nvim.git $env:USERPROFILE\AppData\Local\nvim\ 
 ```
 
 ### Windows Installation
