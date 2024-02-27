@@ -2,8 +2,6 @@
 
 ## Introduction
 
-Based on the kickstart.nvim
-
 Best used with:
 - [Lazygit](https://github.com/jesseduffield/lazygit)
 - [ripgrep](https://github.com/BurntSushi/ripgrep)
