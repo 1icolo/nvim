@@ -64,8 +64,8 @@ vim.keymap.set('n', '<C-u>', lazy '<C-u>zz', { noremap = true, silent = true })
 vim.keymap.set('n', '<C-d>', lazy '<C-d>zz', { noremap = true, silent = true })
 
 -- Scrolling through buffers
-vim.api.nvim_set_keymap('n', '<A-.>', ':bnext<CR>', { noremap = true, desc = 'Next Buffer', silent = true })
-vim.api.nvim_set_keymap('n', '<A-,>', ':bprevious<CR>', { noremap = true, desc = 'Previous Buffer', silent = true })
+vim.api.nvim_set_keymap('n', '<A-l>', ':bnext<CR>', { noremap = true, desc = 'Next Buffer', silent = true })
+vim.api.nvim_set_keymap('n', '<A-h>', ':bprevious<CR>', { noremap = true, desc = 'Previous Buffer', silent = true })
 vim.api.nvim_set_keymap('n', '<A-c>', ':bdelete<CR>', { noremap = true, desc = 'Delete Buffer', silent = true })
 vim.api.nvim_set_keymap('n', '<C-A-c>', ':bdelete!<CR>', { noremap = true, desc = 'Force Delete Buffer', silent = true })
 
