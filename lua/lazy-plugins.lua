@@ -45,7 +45,7 @@ require('lazy').setup({
   require 'kickstart.plugins.lspconfig', -- Language server protocol
   require 'kickstart.plugins.lualine', -- Status line, tab line, and window bar modification
   require 'kickstart.plugins.neodev', -- Annotations for completion, hover and signatures
-  require 'kickstart.plugins.noice', -- Notification and command popups
+  -- require 'kickstart.plugins.noice', -- Notification and command popups
   require 'kickstart.plugins.refractoring', -- Refractoring
   require 'kickstart.plugins.sleuth', -- Detect tabstop and shiftwidth automatically
   require 'kickstart.plugins.telescope', -- Fuzzy finder
