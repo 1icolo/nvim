@@ -11,6 +11,8 @@
 -- NOTE: Here is where you install your plugins.
 require('lazy').setup({
 
+  -- [[ Plugin Specs list ]]
+
   -- NOTE: Plugins can be added with a link (or for a github repo: 'owner/repo' link).
   --
   -- 'tpope/vim-sleuth',
