@@ -59,6 +59,10 @@ vim.opt.scrolloff = 10
 -- Automatically change current directory
 vim.cmd.set 'autochdir'
 
+-- Status line at bottom
+vim.cmd.set 'laststatus=3'
+vim.cmd.set 'cmdheight=0'
+
 -- Hybrid Line Numbers
 -- vim.cmd.autocmd 'TermOpen * setlocal nonumber norelativenumber'
 -- vim.cmd.set 'number relativenumber'
