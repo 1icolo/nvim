@@ -61,7 +61,7 @@ vim.cmd.set 'autochdir'
 
 -- Status line at bottom
 vim.cmd.set 'laststatus=3'
-vim.cmd.set 'cmdheight=0'
+vim.cmd.set 'cmdheight=1'
 
 -- Hybrid Line Numbers
 -- vim.cmd.autocmd 'TermOpen * setlocal nonumber norelativenumber'

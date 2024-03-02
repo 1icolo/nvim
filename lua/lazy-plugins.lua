@@ -30,35 +30,36 @@ require('lazy').setup({
   -- modular approach: using `require 'path/name'` will
   -- include a plugin definition from file lua/path/name.lua
 
-  -- require 'kickstart.plugins.mini',
-  require 'kickstart.plugins.Comment', -- For commenting
-  require 'kickstart.plugins.autopairs', -- Auto pairing of {}, [], etc
-  require 'kickstart.plugins.cmp', -- Autocompletion
-  require 'kickstart.plugins.colorscheme', -- Import all colorschemes here
-  require 'kickstart.plugins.conform', -- Autoformat
-  require 'kickstart.plugins.debug', -- Shows how to use the DAP plugin to debug your code
-  require 'kickstart.plugins.gitsigns', -- Adds git related signs to the gutter, as well as utilities for managing changes
-  require 'kickstart.plugins.highlight-colors', -- Highlighting hex or rgba codes
-  require 'kickstart.plugins.indent_line', -- Add indentation guides even on blank lines
-  require 'kickstart.plugins.java', -- Java integration
-  require 'kickstart.plugins.lazygit', -- Github TUI
-  require 'kickstart.plugins.lspconfig', -- Language server protocol
-  require 'kickstart.plugins.lualine', -- Status line, tab line, and window bar modification
-  require 'kickstart.plugins.neodev', -- Annotations for completion, hover and signatures
-  -- require 'kickstart.plugins.noice', -- Notification and command popups
-  require 'kickstart.plugins.refractoring', -- Refractoring
-  require 'kickstart.plugins.sleuth', -- Detect tabstop and shiftwidth automatically
-  require 'kickstart.plugins.telescope', -- Fuzzy finder
-  require 'kickstart.plugins.telescope-file-browser', -- File browser inside telescope
-  require 'kickstart.plugins.todo-comments', -- Highlight todo, notes, etc in comments
-  require 'kickstart.plugins.treesitter', -- Highlight, edit, and navigate code
-  require 'kickstart.plugins.ts-autotag', -- Auto closing of html tags through treesitter
-  require 'kickstart.plugins.vim-tmux-navigator', -- Vim-Tmux integration for navigation
-  require 'kickstart.plugins.web-devicons', -- Icons
-  require 'kickstart.plugins.which-key', -- -- Useful plugin to show you pending keybinds
+  -- require 'plugins.mini',
+  require 'plugins.Comment', -- For commenting
+  require 'plugins.autopairs', -- Auto pairing of {}, [], etc
+  require 'plugins.cmp', -- Autocompletion
+  require 'plugins.colorscheme', -- Import all colorschemes here
+  require 'plugins.conform', -- Autoformat
+  require 'plugins.debug', -- Shows how to use the DAP plugin to debug your code
+  require 'plugins.gitsigns', -- Adds git related signs to the gutter, as well as utilities for managing changes
+  require 'plugins.highlight-colors', -- Highlighting hex or rgba codes
+  require 'plugins.indent_line', -- Add indentation guides even on blank lines
+  require 'plugins.java', -- Java integration
+  require 'plugins.lazygit', -- Github TUI
+  require 'plugins.lspconfig', -- Language server protocol
+  require 'plugins.lualine', -- Status line, tab line, and window bar modification
+  require 'plugins.neodev', -- Annotations for completion, hover and signatures
+  require 'plugins.noice', -- Notification and command popups
+  require 'plugins.refractoring', -- Refractoring
+  require 'plugins.sleuth', -- Detect tabstop and shiftwidth automatically
+  require 'plugins.telescope', -- Fuzzy finder
+  require 'plugins.telescope-file-browser', -- File browser inside telescope
+  require 'plugins.todo-comments', -- Highlight todo, notes, etc in comments
+  require 'plugins.treesitter', -- Highlight, edit, and navigate code
+  require 'plugins.ts-autotag', -- Auto closing of html tags through treesitter
+  require 'plugins.vim-tmux-navigator', -- Vim-Tmux integration for navigation
+  require 'plugins.web-devicons', -- Icons
+  require 'plugins.wildfire', -- Incremental selection
+  require 'plugins.which-key', -- -- Useful plugin to show you pending keybinds
 
   -- Uncomment this to simply import all plugins in the specified folder
-  -- { import = 'kickstart.plugins' },
+  -- { import = 'plugins' },
 }, {})
 
 -- vim: ts=2 sts=2 sw=2 et
