@@ -30,7 +30,6 @@ require('lazy').setup({
   -- modular approach: using `require 'path/name'` will
   -- include a plugin definition from file lua/path/name.lua
 
-  -- require 'plugins.mini',
   require 'plugins.Comment', -- For commenting
   require 'plugins.autopairs', -- Auto pairing of {}, [], etc
   require 'plugins.cmp', -- Autocompletion
@@ -44,6 +43,7 @@ require('lazy').setup({
   require 'plugins.lazygit', -- Github TUI
   require 'plugins.lspconfig', -- Language server protocol
   require 'plugins.lualine', -- Status line, tab line, and window bar modification
+  require 'plugins.mini', -- A collection of small plugins
   require 'plugins.neodev', -- Annotations for completion, hover and signatures
   require 'plugins.noice', -- Notification and command popups
   require 'plugins.refractoring', -- Refractoring
@@ -55,8 +55,8 @@ require('lazy').setup({
   require 'plugins.ts-autotag', -- Auto closing of html tags through treesitter
   require 'plugins.vim-tmux-navigator', -- Vim-Tmux integration for navigation
   require 'plugins.web-devicons', -- Icons
-  require 'plugins.wildfire', -- Incremental selection
-  require 'plugins.which-key', -- -- Useful plugin to show you pending keybinds
+  require 'plugins.which-key', -- Useful plugin to show you pending keybinds
+  require 'plugins.wildfire', -- Incremental selection with <CR>
 
   -- Uncomment this to simply import all plugins in the specified folder
   -- { import = 'plugins' },
