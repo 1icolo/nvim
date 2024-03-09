@@ -17,6 +17,16 @@ return {
       -- - sr)'  - [S]urround [R]eplace [)] [']
       require('mini.surround').setup()
 
+      -- Notable plugins
+      -- mini.notify
+      -- mini.pairs
+      -- mini.starter
+      -- mini.align
+      require('mini.starter').setup()
+      require('mini.align').setup()
+      require('mini.pairs').setup()
+      -- require('mini.notify').setup()
+
       -- Simple and easy statusline.
       --  You could remove this setup call if you don't like it,
       --  and try some other statusline plugin
