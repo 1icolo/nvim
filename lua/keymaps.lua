@@ -88,25 +88,25 @@ vim.api.nvim_set_keymap('n', '<leader>gl', ':LazyGit<CR>', { noremap = true, des
 
 -- Telescope File Browser
 -- Browser in Git Root
-local function get_git_root()
-  local dot_git_path = vim.fn.finddir('.git', '.;')
-  return vim.fn.fnamemodify(dot_git_path, ':h')
-end
-vim.api.nvim_set_keymap(
-  'n',
-  '<leader>sB',
-  string.format(':Telescope file_browser path=%s<CR>', get_git_root()),
-  { noremap = true, desc = '[S]earch by [B]rowsing Files in Git Root' }
-)
+-- local function get_git_root()
+--   local dot_git_path = vim.fn.finddir('.git', '.;')
+--   return vim.fn.fnamemodify(dot_git_path, ':h')
+-- end
+-- vim.api.nvim_set_keymap(
+--   'n',
+--   '<leader>su',
+--   string.format(':Telescope file_browser path=%s<CR>', get_git_root()),
+--   -- { noremap = true, desc = '[S]earch by [B]rowsing Files in Git Root' }
+-- )
 -- Browse in buffer directory
 vim.api.nvim_set_keymap(
   'n',
   '<leader>sb',
   ':Telescope file_browser path=%:p:h select_buffer=true<CR>',
-  { noremap = true, desc = '[S]earch by [b]rowsing Files Relative' }
+  { noremap = true, desc = '[S]earch by [b]rowsing Files Relative', silent = true }
 )
 -- Browse in home
--- vim.api.nvim_set_keymap('n', '<space>sB', ':Telescope file_browser path=~<CR>', { noremap = true, desc = '[S]earch by [B]rowsing Files Global' })
+vim.api.nvim_set_keymap('n', '<space>sB', ':Telescope file_browser path=~<CR>', { noremap = true, desc = '[S]earch by [B]rowsing Files Global' })
 
 -- Toggle Highlight Colors
 vim.api.nvim_set_keymap('n', '<leader>tc', ":lua require('nvim-highlight-colors').toggle()<CR>", { noremap = true, desc = '[T]oggle Highlight [C]olors' })
