@@ -32,7 +32,7 @@ require('lazy').setup({
 
   require 'colorschemes', -- Import all colorschemes here
   require 'plugins.Comment', -- For commenting
-  require 'plugins.autopairs', -- Auto pairing of {}, [], etc
+  -- require 'plugins.autopairs', -- Auto pairing of {}, [], etc
   require 'plugins.cmp', -- Autocompletion
   require 'plugins.conform', -- Autoformat
   require 'plugins.debug', -- Shows how to use the DAP plugin to debug your code
