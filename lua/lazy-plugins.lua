@@ -30,10 +30,10 @@ require('lazy').setup({
   -- modular approach: using `require 'path/name'` will
   -- include a plugin definition from file lua/path/name.lua
 
+  require 'colorschemes', -- Import all colorschemes here
   require 'plugins.Comment', -- For commenting
   require 'plugins.autopairs', -- Auto pairing of {}, [], etc
   require 'plugins.cmp', -- Autocompletion
-  require 'plugins.colorscheme', -- Import all colorschemes here
   require 'plugins.conform', -- Autoformat
   require 'plugins.debug', -- Shows how to use the DAP plugin to debug your code
   require 'plugins.gitsigns', -- Adds git related signs to the gutter, as well as utilities for managing changes
