@@ -32,7 +32,6 @@ require('lazy').setup({
 
   require 'colorschemes', -- Import all colorschemes here
   require 'plugins.Comment', -- For commenting
-  -- require 'plugins.autopairs', -- Auto pairing of {}, [], etc
   require 'plugins.cmp', -- Autocompletion
   require 'plugins.conform', -- Autoformat
   require 'plugins.debug', -- Shows how to use the DAP plugin to debug your code
@@ -45,7 +44,7 @@ require('lazy').setup({
   require 'plugins.lualine', -- Status line, tab line, and window bar modification
   require 'plugins.mini', -- A collection of small plugins
   require 'plugins.neodev', -- Annotations for completion, hover and signatures
-  require 'plugins.noice', -- Notification and command popups
+  -- require 'plugins.noice', -- Notification and command popups
   require 'plugins.refractoring', -- Refractoring
   require 'plugins.sleuth', -- Detect tabstop and shiftwidth automatically
   require 'plugins.telescope', -- Fuzzy finder
