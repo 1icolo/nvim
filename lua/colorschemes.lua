@@ -1,4 +1,4 @@
-IsTransparent = true
+IsTransparent = false
 IsTerminalColors = true
 GetCodeStyle = {
   comments = 'italic',
@@ -18,6 +18,7 @@ return {
   {
     'catppuccin/nvim',
     name = 'catppuccin',
+    priority = 1000, -- make sure to load this before all the other start plugins
     opts = {
       -- flavour = "frappe", -- latte, frappe, macchiato, mocha
       -- background = {      -- :h background
@@ -104,10 +105,9 @@ return {
   },
   {
     'folke/tokyonight.nvim',
-    lazy = false, -- make sure we load this during startup if it is your main colorscheme
-    priority = 1000, -- make sure to load this before all the other start plugins
+    -- priority = 1000, -- make sure to load this before all the other start plugins
     opts = {},
-    config = function()
+    init = function()
       -- Load the colorscheme here
       -- vim.cmd.colorscheme 'tokyonight-night'
 
