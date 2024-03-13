@@ -56,6 +56,7 @@ require('lazy').setup({
   require 'plugins.web-devicons', -- Icons
   require 'plugins.which-key', -- Useful plugin to show you pending keybinds
   require 'plugins.wildfire', -- Incremental selection with <CR>
+  require 'plugins.telescope-zoxide', -- Better cd
 
   -- Uncomment this to simply import all plugins in the specified folder
   -- { import = 'plugins' },
