@@ -71,8 +71,8 @@ vim.cmd.set 'cmdheight=1'
 -- vim.cmd.set 'number relativenumber'
 
 -- Tabs
-vim.opt.tabstop = 4
-vim.opt.shiftwidth = 4
+vim.opt.tabstop = 2
+vim.opt.shiftwidth = 2
 vim.opt.expandtab = true
-vim.o.tabstop = 4
+vim.o.tabstop = 2
 vim.o.smartindent = true
