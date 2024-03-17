@@ -35,6 +35,7 @@ require('lazy').setup({
   require 'plugins.cmp', -- Autocompletion
   require 'plugins.conform', -- Autoformat
   require 'plugins.debug', -- Shows how to use the DAP plugin to debug your code
+  require 'plugins.fidget', -- Notifications
   require 'plugins.gitsigns', -- Adds git related signs to the gutter, as well as utilities for managing changes
   require 'plugins.highlight-colors', -- Highlighting hex or rgba codes
   require 'plugins.indent_line', -- Add indentation guides even on blank lines
