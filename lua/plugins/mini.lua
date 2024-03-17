@@ -25,7 +25,7 @@ return {
       require('mini.starter').setup()
       require('mini.align').setup()
       require('mini.pairs').setup()
-      require('mini.notify').setup()
+      -- require('mini.notify').setup()
 
       -- Simple and easy statusline.
       --  You could remove this setup call if you don't like it,
