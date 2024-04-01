@@ -27,40 +27,44 @@ return {
       lualine_a = { 'mode' },
       lualine_b = { 'branch', 'diff', 'diagnostics' },
       lualine_c = {
-        {
-          'buffers',
-          show_filename_only = true,
-          mode = 2,
-          icon = false,
-        },
+        { 'filename', path = 4 },
       },
       lualine_x = { 'encoding', 'fileformat', 'filetype' },
       lualine_y = { 'progress' },
       lualine_z = { 'location' },
     },
     inactive_sections = {
-      lualine_a = {},
-      lualine_b = {},
-      lualine_c = { 'filename' },
+      -- lualine_a = {},
+      -- lualine_b = {},
+      -- lualine_c = {},
       lualine_x = { 'location' },
-      lualine_y = {},
-      lualine_z = {},
+      -- lualine_y = {},
+      -- lualine_z = {},
     },
     tabline = {
       -- lualine_a = { 'tabs' },
       -- lualine_b = { 'windows' },
       -- lualine_c = {},
       -- lualine_x = { 'selectioncount', 'searchcount' },
-      -- lualine_y = {},
+      lualine_x = {
+        {
+          'buffers',
+          mode = 4,
+          icon = false,
+          separator = nil,
+          max_length = vim.o.columns,
+        },
+      },
+      -- lualine_y = {}
       -- lualine_z = {}
     },
     winbar = {
       -- lualine_a = {},
       -- lualine_b = {},
-      -- lualine_c = { 'filename' },
+      -- lualine_c = {},
       -- lualine_x = {},
       -- lualine_y = {},
-      -- lualine_z = {}
+      -- lualine_z = {},
     },
     inactive_winbar = {
       -- lualine_a = {},
@@ -68,7 +72,7 @@ return {
       -- lualine_c = { 'filename' },
       -- lualine_x = {},
       -- lualine_y = {},
-      -- lualine_z = {}
+      -- lualine_z = {},
     },
     extensions = {},
   },
