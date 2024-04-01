@@ -26,9 +26,7 @@ return {
     sections = {
       lualine_a = { 'mode' },
       lualine_b = { 'branch', 'diff', 'diagnostics' },
-      lualine_c = {
-        { 'filename', path = 4 },
-      },
+      lualine_c = {},
       lualine_x = { 'encoding', 'fileformat', 'filetype' },
       lualine_y = { 'progress' },
       lualine_z = { 'location' },
@@ -55,7 +53,12 @@ return {
           max_length = vim.o.columns,
         },
       },
-      -- lualine_y = {}
+      lualine_y = {
+        function()
+          local path = vim.fn.getcwd()
+          return path:match '([^/]+)$' -- Extract the last component
+        end,
+      },
       -- lualine_z = {}
     },
     winbar = {
