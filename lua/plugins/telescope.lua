@@ -109,6 +109,13 @@ return {
       vim.keymap.set('n', '<leader>sn', function()
         builtin.find_files { cwd = vim.fn.stdpath 'config' }
       end, { desc = '[S]earch [N]eovim files' })
+
+      -- Live Grep for Git Directory
+      vim.keymap.set('n', '<leader>sG', function()
+        local git_dir = vim.fn.system(string.format('git -C %s rev-parse --show-toplevel', vim.fn.expand '%:p:h'))
+        git_dir = string.gsub(git_dir, '\n', '') -- remove newline character from git_dir
+        builtin.live_grep { cwd = git_dir }
+      end, { desc = '[S]earch by [G]rep in Git' })
     end,
   },
 }
