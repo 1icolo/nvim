@@ -54,12 +54,22 @@ return {
         },
       },
       lualine_y = {
-        function()
-          local path = vim.fn.getcwd()
-          return path:match '([^/]+)$' -- Extract the last component
-        end,
+        {
+          function()
+            local path = vim.fn.getcwd()
+            return path:match '([^/]+)$' -- Extract the last component
+          end,
+        },
+        -- 'filename',
       },
-      -- lualine_z = {}
+      lualine_z = {
+        'filename',
+        -- {
+        --   'filetype',
+        --   colored = false,
+        --   icon_only = true,
+        -- },
+      },
     },
     winbar = {
       -- lualine_a = {},
