@@ -14,6 +14,7 @@ Best used with:
 External Requirements:
 - Basic utils: `git`, `make`, `unzip`, C Compiler (`gcc`)
 - [ripgrep](https://github.com/BurntSushi/ripgrep#installation)
+- Clipboard tool (xclip/xsel/win32yank or other depending on platform)
 - Language Setup:
   - If want to write Typescript, you need `npm`
   - If want to write Golang, you will need `go`
