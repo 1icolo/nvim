@@ -22,6 +22,9 @@ require 'lazy-bootstrap'
 -- [[ Configure and install plugins ]]
 require 'lazy-plugins'
 
+-- [[ Configure Neovide ]]
+require 'neovide'
+
 -- [[ Set colorscheme ]]
 vim.cmd.colorscheme 'rose-pine'
 
