@@ -1,246 +1,33 @@
 -- ============================================================================
--- Project Management
+-- Plugins
 -- ============================================================================
 
--- State management
-local state = {
-  current_dir = vim.fn.getcwd(),
-  file_win = nil,
-  file_buf = nil,
-  terminal_state = {
-    buf = nil,
-    win = nil,
-    is_open = false,
-    job_id = nil,
-  }
+vim.pack.add {
+  { src = 'https://github.com/neovim/nvim-lspconfig' },
+  { src = 'https://github.com/nvim-treesitter/nvim-treesitter' },
+  { src = 'https://github.com/folke/which-key.nvim' },
+  { src = 'https://github.com/folke/persistence.nvim' },
+  { src = 'https://github.com/Mofiqul/vscode.nvim' },
 }
-
--- ============================================================================
--- Project Navigation
--- ============================================================================
-
--- Open directory as project
-function open_project(path)
-  path = path or vim.fn.input("Project path: ", vim.fn.getcwd(), "dir")
-  if path == "" then return end
-
-  path = vim.fn.expand(path)
-  if not vim.fn.isdirectory(path) then
-    print("Error: " .. path .. " is not a directory")
-    return
-  end
-
-  state.current_dir = path
-  vim.cmd("cd " .. vim.fn.fnameescape(path))
-  print("Project opened: " .. path)
-
-  -- Auto-open file explorer
-  toggle_explorer()
-end
-
--- Get directory contents
-local function get_dir_contents(dir)
-  local items = {}
-
-  -- Add parent directory option
-  if dir ~= "/" then
-    table.insert(items, "../")
-  end
-
-  -- Get directory contents
-  local handle = vim.loop.fs_scandir(dir)
-  if handle then
-    while true do
-      local name, type = vim.loop.fs_scandir_next(handle)
-      if not name then break end
-
-      if name:sub(1, 1) ~= "." then -- Skip hidden files
-        if type == "directory" then
-          table.insert(items, name .. "/")
-        else
-          table.insert(items, name)
-        end
-      end
-    end
-  end
-
-  -- Sort: directories first, then files
-  table.sort(items, function(a, b)
-    local a_is_dir = a:sub(-1) == "/"
-    local b_is_dir = b:sub(-1) == "/"
-    if a_is_dir and not b_is_dir then return true end
-    if not a_is_dir and b_is_dir then return false end
-    return a < b
-  end)
-
-  return items
-end
-
--- Create file explorer
-function create_explorer()
-  if state.file_buf and vim.api.nvim_buf_is_valid(state.file_buf) then
-    vim.api.nvim_buf_delete(state.file_buf, { force = true })
-  end
-
-  -- Create buffer
-  state.file_buf = vim.api.nvim_create_buf(false, true)
-  vim.bo[state.file_buf].buftype = "nofile"
-  vim.bo[state.file_buf].swapfile = false
-  vim.bo[state.file_buf].buflisted = false
-  vim.bo[state.file_buf].bufhidden = "wipe"
-
-  -- Set buffer name
-  vim.api.nvim_buf_set_name(state.file_buf, "Explorer: " .. state.current_dir)
-
-  -- Populate with directory contents
-  local items = get_dir_contents(state.current_dir)
-  local lines = { "Project: " .. state.current_dir, "" }
-
-  for _, item in ipairs(items) do
-    table.insert(lines, item)
-  end
-
-  vim.api.nvim_buf_set_lines(state.file_buf, 0, -1, false, lines)
-  vim.bo[state.file_buf].modifiable = false
-
-  -- Set up keymaps
-  local opts = { buffer = state.file_buf, silent = true }
-
-  vim.keymap.set("n", "<CR>", open_item, opts)
-  vim.keymap.set("n", "q", close_explorer, opts)
-  vim.keymap.set("n", "R", refresh_explorer, opts)
-  vim.keymap.set("n", "~", function() change_directory(vim.fn.expand("~")) end, opts)
-  vim.keymap.set("n", "t", toggle_terminal, opts)
-
-  return state.file_buf
-end
-
--- Toggle file explorer
-function toggle_explorer()
-  if state.file_win and vim.api.nvim_win_is_valid(state.file_win) then
-    close_explorer()
-    return
-  end
-
-  -- Create buffer
-  create_explorer()
-
-  -- Create window (vertical split)
-  vim.cmd("vsplit")
-  state.file_win = vim.api.nvim_get_current_win()
-  vim.api.nvim_win_set_buf(state.file_win, state.file_buf)
-
-  -- Set window width
-  vim.api.nvim_win_set_width(state.file_win, 30)
-
-  -- Set window options
-  vim.wo[state.file_win].number = false
-  vim.wo[state.file_win].relativenumber = false
-  vim.wo[state.file_win].wrap = false
-  vim.wo[state.file_win].cursorline = true
-end
-
--- Close file explorer
-function close_explorer()
-  if state.file_win and vim.api.nvim_win_is_valid(state.file_win) then
-    vim.api.nvim_win_close(state.file_win, false)
-    state.file_win = nil
-  end
-end
-
--- Refresh explorer
-function refresh_explorer()
-  if not state.file_buf or not vim.api.nvim_buf_is_valid(state.file_buf) then
-    return
-  end
-
-  local cursor_pos = vim.api.nvim_win_get_cursor(0)
-  create_explorer()
-
-  if state.file_win and vim.api.nvim_win_is_valid(state.file_win) then
-    vim.api.nvim_win_set_buf(state.file_win, state.file_buf)
-    -- Restore cursor position
-    pcall(vim.api.nvim_win_set_cursor, state.file_win, cursor_pos)
-  end
-end
-
--- Open item under cursor
-function open_item()
-  local line = vim.api.nvim_get_current_line()
-  if line == "" or line:match("^Project:") then return end
-
-  local item = line
-  local full_path = state.current_dir .. "/" .. item
-
-  if item == "../" then
-    -- Go to parent directory
-    change_directory(vim.fn.fnamemodify(state.current_dir, ":h"))
-  elseif item:sub(-1) == "/" then
-    -- Enter directory
-    change_directory(full_path:sub(1, -2))
-  else
-    -- Open file
-    -- Go to main window (not explorer window)
-    local main_win = nil
-    for _, win in ipairs(vim.api.nvim_list_wins()) do
-      if win ~= state.file_win then
-        main_win = win
-        break
-      end
-    end
-
-    if main_win then
-      vim.api.nvim_set_current_win(main_win)
-      vim.cmd("edit " .. vim.fn.fnameescape(full_path))
-    end
-  end
-end
-
--- Change directory
-function change_directory(new_dir)
-  if vim.fn.isdirectory(new_dir) == 0 then
-    print("Error: " .. new_dir .. " is not a directory")
-    return
-  end
-
-  state.current_dir = vim.fn.resolve(new_dir)
-  vim.cmd("cd " .. vim.fn.fnameescape(state.current_dir))
-  refresh_explorer()
-end
-
--- ============================================================================
--- Project Keymaps
--- ============================================================================
-
--- Project management
-vim.keymap.set("n", "<leader>po", open_project, { desc = "Open project" })
-vim.keymap.set("n", "<leader>pe", toggle_explorer, { desc = "Toggle project explorer" })
-vim.keymap.set("n", "<leader>pc", function() change_directory(vim.fn.getcwd()) end,
-  { desc = "Change to current directory" })
-
--- Quick navigation
-vim.keymap.set("n", "<leader>.", function() open_project(vim.fn.getcwd()) end,
-  { desc = "Open current directory as project" })
 
 -- ============================================================================
 -- Basic Configuration
 -- ============================================================================
---
 
 -- [[ Keymaps ]]
 vim.keymap.set("n", "<D-v>", '"+p', { noremap = true, silent = true }) -- Paste from system clipboard using Command+V (macOS)
 
--- Reformat paragraph and retab using <leader>gr
+-- [[ Reformat paragraph and retab using <leader>gr ]]
 vim.keymap.set("n", "<leader>gr", function()
   vim.cmd("normal! gq")
   vim.cmd("retab")
 end, { noremap = true, silent = true, desc = "Reformat and retab" })
 
 -- [[ Set colorscheme ]]
-vim.cmd.colorscheme("zaibatsu")
 vim.api.nvim_set_hl(0, "Normal", { bg = "none" })
 vim.api.nvim_set_hl(0, "NormalNC", { bg = "none" })
 vim.api.nvim_set_hl(0, "EndOfBuffer", { bg = "none" })
+vim.cmd.colorscheme("vscode")
 vim.g.have_nerd_font = true
 
 -- [[ Basic settings ]]
@@ -485,6 +272,236 @@ vim.api.nvim_create_autocmd("FileType", {
     pcall(vim.treesitter.start, ev.buf)
   end,
 })
+
+-- ============================================================================
+-- Project Management
+-- ============================================================================
+
+local M = {}
+
+-- State management
+local state = {
+  current_dir = vim.fn.getcwd(),
+  file_win = nil,
+  file_buf = nil,
+  terminal_state = {
+    buf = nil,
+    win = nil,
+    is_open = false,
+    job_id = nil,
+  }
+}
+
+-- ============================================================================
+-- Project Navigation
+-- ============================================================================
+
+-- Open directory as project
+function M.open_project(path)
+  path = path or vim.fn.input("Project path: ", vim.fn.getcwd(), "dir")
+  if path == "" then return end
+
+  path = vim.fn.expand(path)
+  if not vim.fn.isdirectory(path) then
+    print("Error: " .. path .. " is not a directory")
+    return
+  end
+
+  state.current_dir = path
+  vim.cmd("cd " .. vim.fn.fnameescape(path))
+  print("Project opened: " .. path)
+
+  -- Auto-open file explorer
+  M.toggle_explorer()
+end
+
+-- Get directory contents
+function M.get_dir_contents(dir)
+  local items = {}
+
+  -- Add parent directory option
+  if dir ~= "/" then
+    table.insert(items, "../")
+  end
+
+  -- Get directory contents
+  local handle = vim.loop.fs_scandir(dir)
+  if handle then
+    while true do
+      local name, type = vim.loop.fs_scandir_next(handle)
+      if not name then break end
+
+      if name:sub(1, 1) ~= "." then -- Skip hidden files
+        if type == "directory" then
+          table.insert(items, name .. "/")
+        else
+          table.insert(items, name)
+        end
+      end
+    end
+  end
+
+  -- Sort: directories first, then files
+  table.sort(items, function(a, b)
+    local a_is_dir = a:sub(-1) == "/"
+    local b_is_dir = b:sub(-1) == "/"
+    if a_is_dir and not b_is_dir then return true end
+    if not a_is_dir and b_is_dir then return false end
+    return a < b
+  end)
+
+  return items
+end
+
+-- Create file explorer
+function M.create_explorer()
+  if state.file_buf and vim.api.nvim_buf_is_valid(state.file_buf) then
+    vim.api.nvim_buf_delete(state.file_buf, { force = true })
+  end
+
+  -- Create buffer
+  state.file_buf = vim.api.nvim_create_buf(false, true)
+  vim.bo[state.file_buf].buftype = "nofile"
+  vim.bo[state.file_buf].swapfile = false
+  vim.bo[state.file_buf].buflisted = false
+  vim.bo[state.file_buf].bufhidden = "wipe"
+
+  -- Set buffer name
+  vim.api.nvim_buf_set_name(state.file_buf, "Explorer: " .. state.current_dir)
+
+  -- Populate with directory contents
+  local items = M.get_dir_contents(state.current_dir)
+  local lines = { "Project: " .. state.current_dir, "" }
+
+  for _, item in ipairs(items) do
+    table.insert(lines, item)
+  end
+
+  vim.api.nvim_buf_set_lines(state.file_buf, 0, -1, false, lines)
+  vim.bo[state.file_buf].modifiable = false
+
+  -- Set up keymaps
+  local opts = { buffer = state.file_buf, silent = true }
+
+  vim.keymap.set("n", "<CR>", M.open_item, opts)
+  vim.keymap.set("n", "q", M.close_explorer, opts)
+  vim.keymap.set("n", "R", M.refresh_explorer, opts)
+  vim.keymap.set("n", "~", function() M.change_directory(vim.fn.expand("~")) end, opts)
+  vim.keymap.set("n", "t", toggle_terminal, opts)
+
+  return state.file_buf
+end
+
+-- Toggle file explorer
+function M.toggle_explorer()
+  if state.file_win and vim.api.nvim_win_is_valid(state.file_win) then
+    close_explorer()
+    return
+  end
+
+  -- Create buffer
+  M.create_explorer()
+
+  -- Create window (vertical split)
+  vim.cmd("vsplit")
+  state.file_win = vim.api.nvim_get_current_win()
+  vim.api.nvim_win_set_buf(state.file_win, state.file_buf)
+
+  -- Set window width
+  vim.api.nvim_win_set_width(state.file_win, 30)
+
+  -- Set window options
+  vim.wo[state.file_win].number = false
+  vim.wo[state.file_win].relativenumber = false
+  vim.wo[state.file_win].wrap = false
+  vim.wo[state.file_win].cursorline = true
+end
+
+-- Close file explorer
+function M.close_explorer()
+  if state.file_win and vim.api.nvim_win_is_valid(state.file_win) then
+    vim.api.nvim_win_close(state.file_win, false)
+    state.file_win = nil
+  end
+end
+
+-- Refresh explorer
+function M.refresh_explorer()
+  if not state.file_buf or not vim.api.nvim_buf_is_valid(state.file_buf) then
+    return
+  end
+
+  local cursor_pos = vim.api.nvim_win_get_cursor(0)
+  M.create_explorer()
+
+  if state.file_win and vim.api.nvim_win_is_valid(state.file_win) then
+    vim.api.nvim_win_set_buf(state.file_win, state.file_buf)
+    -- Restore cursor position
+    pcall(vim.api.nvim_win_set_cursor, state.file_win, cursor_pos)
+  end
+end
+
+-- Open item under cursor
+function M.open_item()
+  local line = vim.api.nvim_get_current_line()
+  if line == "" or line:match("^Project:") then return end
+
+  local item = line
+  local full_path = state.current_dir .. "/" .. item
+
+  if item == "../" then
+    -- Go to parent directory
+    M.change_directory(vim.fn.fnamemodify(state.current_dir, ":h"))
+  elseif item:sub(-1) == "/" then
+    -- Enter directory
+    M.change_directory(full_path:sub(1, -2))
+  else
+    -- Open file
+    -- Go to main window (not explorer window)
+    local main_win = nil
+    for _, win in ipairs(vim.api.nvim_list_wins()) do
+      if win ~= state.file_win then
+        main_win = win
+        break
+      end
+    end
+
+    if main_win then
+      vim.api.nvim_set_current_win(main_win)
+      vim.cmd("edit " .. vim.fn.fnameescape(full_path))
+    end
+  end
+end
+
+-- Change directory
+function M.change_directory(new_dir)
+  if vim.fn.isdirectory(new_dir) == 0 then
+    print("Error: " .. new_dir .. " is not a directory")
+    return
+  end
+
+  state.current_dir = vim.fn.resolve(new_dir)
+  vim.cmd("cd " .. vim.fn.fnameescape(state.current_dir))
+  M.refresh_explorer()
+end
+
+_G.ProjectManagement = M
+
+-- ============================================================================
+-- Project Keymaps
+-- ============================================================================
+
+-- [[ Project management ]]
+vim.keymap.set("n", "<leader>po", M.open_project,
+  { desc = "Open project" })
+vim.keymap.set("n", "<leader>pe", M.toggle_explorer,
+  { desc = "Toggle project explorer" })
+vim.keymap.set("n", "<leader>pc", function() M.change_directory(vim.fn.getcwd()) end,
+  { desc = "Change to current directory" })
+
+-- [[ Quick navigation ]]
+vim.keymap.set("n", "<leader>.", function() M.open_project(vim.fn.getcwd()) end,
+  { desc = "Open current directory as project" })
 
 -- ============================================================================
 -- FLOATING TERMINAL
@@ -781,7 +798,7 @@ vim.api.nvim_set_hl(0, "StatusLineNC", {
 local function lsp_status()
   local clients = vim.lsp.get_clients({ bufnr = 0 })
   if #clients > 0 then
-    return "  LSP "
+    return " LSP "
   end
   return ""
 end
@@ -1137,17 +1154,6 @@ vim.api.nvim_create_user_command('LspInfo', function()
 end, {})
 
 -- ============================================================================
--- Plugins
--- ============================================================================
-
-vim.pack.add {
-  { src = 'https://github.com/neovim/nvim-lspconfig' },
-  { src = 'https://github.com/nvim-treesitter/nvim-treesitter' },
-  { src = 'https://github.com/folke/which-key.nvim' },
-  { src = 'https://github.com/folke/persistence.nvim' },
-}
-
--- ============================================================================
 -- Neovide Configuration
 -- ============================================================================
 
@@ -1218,3 +1224,4 @@ end
 -- vim.opt.expandtab = true -- Tabs
 -- vim.opt.autoindent = true
 -- vim.opt.smartindent = true
+
