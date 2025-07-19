@@ -387,7 +387,6 @@ function M.create_explorer()
   vim.keymap.set("n", "q", M.close_explorer, opts)
   vim.keymap.set("n", "R", M.refresh_explorer, opts)
   vim.keymap.set("n", "~", function() M.change_directory(vim.fn.expand("~")) end, opts)
-  vim.keymap.set("n", "t", toggle_terminal, opts)
 
   return state.file_buf
 end
@@ -395,7 +394,7 @@ end
 -- Toggle file explorer
 function M.toggle_explorer()
   if state.file_win and vim.api.nvim_win_is_valid(state.file_win) then
-    close_explorer()
+    M.close_explorer()
     return
   end
 
@@ -914,6 +913,21 @@ vim.api.nvim_create_autocmd("FileType", {
   end,
 })
 
+-- Templ LSP configuration (for Go templating)
+vim.api.nvim_create_autocmd("FileType", {
+  desc = "Start Templ LSP",
+  pattern = "templ",
+  callback = function()
+    vim.lsp.config['templ'] = {
+      cmd = { 'templ', 'lsp' },
+      root_markers = { 'go.mod', '.git' },
+      filetypes = { 'templ' },
+    }
+    vim.lsp.enable('templ')
+  end,
+})
+
+
 -- Lua LSP
 vim.api.nvim_create_autocmd("FileType", {
   desc = "Start lua LSP",
@@ -977,20 +991,6 @@ vim.api.nvim_create_autocmd("FileType", {
       vim.notify("tailwindcss-language-server not found. Install with: npm install -g @tailwindcss/language-server",
         vim.log.levels.WARN)
     end
-  end,
-})
-
--- Templ LSP configuration (for Go templating)
-vim.api.nvim_create_autocmd("FileType", {
-  desc = "Start Templ LSP",
-  pattern = "templ",
-  callback = function()
-    vim.lsp.config['templ'] = {
-      cmd = { 'templ', 'lsp' },
-      root_markers = { 'go.mod', '.git' },
-      filetypes = { 'templ' },
-    }
-    vim.lsp.enable('templ')
   end,
 })
 
